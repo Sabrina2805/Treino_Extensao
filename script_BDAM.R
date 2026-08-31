@@ -1,4 +1,4 @@
-# script roteiro do BDAM - no repositório Treino_Extensao
+## script roteiro do BDAM - no repositório Treino_Extensao
 # Antes de começar a fazer qualquer coisa:
 # a) commit este roteiro com a mensagem "script roteiro BDAM" e envie para o repositório Treino_Extensao
 # b) salve o script com outro nome (script_BDAM.R) e commit com a mensagem "script BDAM" e envie para o repositório Treino_Extensao
@@ -265,4 +265,6 @@
 
 # Ao terminar a Tarefa 2 commit com a mensagem "dados e script - Etapa 6" e envie para o repositório Treino_Extensao
 
+dados_bd1 = rename(banco_1_SIM)
+ summary(dados_bd1)
 
