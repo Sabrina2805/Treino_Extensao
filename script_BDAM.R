@@ -268,7 +268,7 @@
 dados_bd1 = rename(banco_1_SIM)
  summary(dados_bd1)
 
-dados_bd1 %>%
+ dados_bd1 <- dados_bd1 %>%
    mutate(
      VEICULO_CAUSADOR = case_when(
        VEICULO_CAUSADOR %in% c("carro", "CARRO") ~ "Carro",
@@ -278,11 +278,20 @@ dados_bd1 %>%
      )
    )
 
-dados_bd1 %>%
+dados_bd1 <- dados_bd1 %>%
   mutate(
     SEXO_CONDUTOR_CAUSADOR = case_when(
       SEXO_CONDUTOR_CAUSADOR == 1 ~ "Masculino",
       SEXO_CONDUTOR_CAUSADOR == 2 ~ "Feminino",
+      TRUE ~ NA_character_
+    )
+  )
+
+dados_bd1 <- dados_bd1 %>%
+  mutate(
+    IDADE_CONDUTOR_CAUSADOR = case_when(
+      IDADE_CONDUTOR_CAUSADOR >= 22 & IDADE_CONDUTOR_CAUSADOR <= 34 ~ "22 a 34",
+      IDADE_CONDUTOR_CAUSADOR >= 35 & IDADE_CONDUTOR_CAUSADOR<= 45 ~ "35 a 45",
       TRUE ~ NA_character_
     )
   )
