@@ -139,7 +139,6 @@ BANCO1_RJ <- bind_rows(banco1_uf, banco1_mun)
 
 # Ao terminar a Tarefa 3 commit com a mensagem " script - tarefa 1 a 3" e envie para o repositório Treino_Extensao
 
-
 # Tarefa 4: Exportar o banco de dados BANCO1_RJ com o nome BANCO1_RJ.csv
 
 # Ao terminar a Tarefa 4 commit com a mensagem "dados e script - Etapa 1"
