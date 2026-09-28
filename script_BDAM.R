@@ -13,6 +13,9 @@
 # Tarefa 1: Leitura do banco de dados banco 1 = SIM.csv com o nome de dados_bd1
 # Ler o arquivo, verificar estrutura dos dados e dar uma olhada nos dados
 
+dados_bd1 = rename(banco_1_SIM)
+summary(dados_bd1)
+
 # Ao terminar a Tarefa 1 commit com a mensagem " script - tarefa 1" e envie para o repositório Treino_Extensao
 
 
@@ -20,6 +23,34 @@
 # Padronizar as categorias VEICULO_CAUSADOR para Carro e Moto e indicar que branco é NA
 # Atribuir legendas para a variável SEXO_CONDUTOR_CAUSADOR, sendo 1: Masculino e 2: Feminino
 # Criar uma nova variável em dados_bd1 F_IDADE categorizando as idades em: 22 a 34, 35 a 45
+
+dados_bd1 <- dados_bd1 %>%
+  mutate(
+    VEICULO_CAUSADOR = case_when(
+      VEICULO_CAUSADOR %in% c("carro", "CARRO") ~ "Carro",
+      VEICULO_CAUSADOR %in% c("moto", "MOTO") ~ "Moto",
+      is.na(VEICULO_CAUSADOR) | trimws(VEICULO_CAUSADOR) == "" ~ NA_character_,
+      TRUE ~ VEICULO_CAUSADOR
+    )
+  )
+
+dados_bd1 <- dados_bd1 %>%
+  mutate(
+    SEXO_CONDUTOR_CAUSADOR = case_when(
+      SEXO_CONDUTOR_CAUSADOR == 1 ~ "Masculino",
+      SEXO_CONDUTOR_CAUSADOR == 2 ~ "Feminino",
+      TRUE ~ NA_character_
+    )
+  )
+
+dados_bd1 <- dados_bd1 %>%
+  mutate(
+    IDADE_CONDUTOR_CAUSADOR = case_when(
+      IDADE_CONDUTOR_CAUSADOR >= 22 & IDADE_CONDUTOR_CAUSADOR <= 34 ~ "22 a 34",
+      IDADE_CONDUTOR_CAUSADOR >= 35 & IDADE_CONDUTOR_CAUSADOR<= 45 ~ "35 a 45",
+      TRUE ~ NA_character_
+    )
+  )
 
 # Ao terminar a Tarefa 2 commit com a mensagem " script - tarefa 1 a 2" e envie para o repositório Treino_Extensao
 
@@ -275,36 +306,7 @@
 
 # Ao terminar a Tarefa 2 commit com a mensagem "dados e script - Etapa 6" e envie para o repositório Treino_Extensao
 
-dados_bd1 = rename(banco_1_SIM)
- summary(dados_bd1)
 
- dados_bd1 <- dados_bd1 %>%
-   mutate(
-     VEICULO_CAUSADOR = case_when(
-       VEICULO_CAUSADOR %in% c("carro", "CARRO") ~ "Carro",
-       VEICULO_CAUSADOR %in% c("moto", "MOTO") ~ "Moto",
-       is.na(VEICULO_CAUSADOR) | trimws(VEICULO_CAUSADOR) == "" ~ NA_character_,
-       TRUE ~ VEICULO_CAUSADOR
-     )
-   )
-
-dados_bd1 <- dados_bd1 %>%
-  mutate(
-    SEXO_CONDUTOR_CAUSADOR = case_when(
-      SEXO_CONDUTOR_CAUSADOR == 1 ~ "Masculino",
-      SEXO_CONDUTOR_CAUSADOR == 2 ~ "Feminino",
-      TRUE ~ NA_character_
-    )
-  )
-
-dados_bd1 <- dados_bd1 %>%
-  mutate(
-    IDADE_CONDUTOR_CAUSADOR = case_when(
-      IDADE_CONDUTOR_CAUSADOR >= 22 & IDADE_CONDUTOR_CAUSADOR <= 34 ~ "22 a 34",
-      IDADE_CONDUTOR_CAUSADOR >= 35 & IDADE_CONDUTOR_CAUSADOR<= 45 ~ "35 a 45",
-      TRUE ~ NA_character_
-    )
-  )
 
 
 
