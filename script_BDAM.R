@@ -13,7 +13,15 @@
 # Tarefa 1: Leitura do banco de dados banco 1 = SIM.csv com o nome de dados_bd1
 # Ler o arquivo, verificar estrutura dos dados e dar uma olhada nos dados
 
+library(readr)
+library(dplyr)
+
+banco_1_SIM <- read_delim("banco 1 SIM.csv", 
+                          delim = ";", escape_double = FALSE, trim_ws = TRUE)
+View(banco_1_SIM)
+
 dados_bd1 = rename(banco_1_SIM)
+
 summary(dados_bd1)
 
 # Ao terminar a Tarefa 1 commit com a mensagem " script - tarefa 1" e envie para o repositório Treino_Extensao
@@ -22,7 +30,7 @@ summary(dados_bd1)
 # Tarefa 2: Manipulação dos dados
 # Padronizar as categorias VEICULO_CAUSADOR para Carro e Moto e indicar que branco é NA
 # Atribuir legendas para a variável SEXO_CONDUTOR_CAUSADOR, sendo 1: Masculino e 2: Feminino
-# Criar uma nova variável em dados_bd1 F_IDADE categorizando as idades em: 22 a 34, 35 a 45
+# Criar uma nova variável em dados_bd1 IDADE_CONDUTOR_CAUSADOR categorizando as idades em: 22 a 34, 35 a 45
 
 dados_bd1 <- dados_bd1 %>%
   mutate(
@@ -79,6 +87,56 @@ dados_bd1 <- dados_bd1 %>%
 # TADA: total de acidentes cuja causa foi o uso de drogas ou álcool
 # TACO: total de acidentes cuja causa foi outros
 
+banco1_mun <- dados_bd1 %>%
+  group_by(MUNICIPIO) %>%
+  summarise(
+    ANO = 2025,
+    NIVEL = "MUNICIPIO",
+    CODIGO = as.character(first(MUNICIPIO)),
+    TV = sum(!is.na(VEICULO_CAUSADOR)),
+    TC = sum(VEICULO_CAUSADOR == "Carro", na.rm = TRUE),
+    TM = sum(VEICULO_CAUSADOR == "Moto", na.rm = TRUE),
+    TVCF = sum(SEXO_CONDUTOR_CAUSADOR == "Feminino", na.rm = TRUE),
+    TVCM = sum(SEXO_CONDUTOR_CAUSADOR == "Masculino", na.rm = TRUE),
+    TC_22_34 = sum(IDADE_CONDUTOR_CAUSADOR == "22 a 34", na.rm = TRUE),
+    TC_35_45 = sum(IDADE_CONDUTOR_CAUSADOR == "35 a 45", na.rm = TRUE),
+    NMF = mean(NUM_FERIDOS_GRAVES, na.rm = TRUE),
+    DPF = sd(NUM_FERIDOS_GRAVES, na.rm = TRUE),
+    F_P25 = quantile(NUM_FERIDOS_GRAVES, probs = 0.25, na.rm = TRUE),
+    F_P50 = quantile(NUM_FERIDOS_GRAVES, probs = 0.50, na.rm = TRUE),
+    F_P75 = quantile(NUM_FERIDOS_GRAVES, probs = 0.75, na.rm = TRUE),
+    TAFA = sum(CAUSA_ACIDENTE == "Falta de atenção", na.rm = TRUE),
+    TADS = sum(CAUSA_ACIDENTE == "Desrespeito à sinalização", na.rm = TRUE),
+    TADA = sum(CAUSA_ACIDENTE == "Uso de drogas ou álcool", na.rm = TRUE),
+    TACO = sum(CAUSA_ACIDENTE == "Outros", na.rm = TRUE),
+    .groups = "drop"
+  )
+
+banco1_uf <- dados_bd1 %>%
+  summarise(
+    ANO = 2025,
+    NIVEL = "UF",
+    CODIGO = "33",
+    TV = sum(!is.na(VEICULO_CAUSADOR)),
+    TC = sum(VEICULO_CAUSADOR == "Carro", na.rm = TRUE),
+    TM = sum(VEICULO_CAUSADOR == "Moto", na.rm = TRUE),
+    TVCF = sum(SEXO_CONDUTOR_CAUSADOR == "Feminino", na.rm = TRUE),
+    TVCM = sum(SEXO_CONDUTOR_CAUSADOR == "Masculino", na.rm = TRUE),
+    TC_22_34 = sum(IDADE_CONDUTOR_CAUSADOR == "22 a 34", na.rm = TRUE),
+    TC_35_45 = sum(IDADE_CONDUTOR_CAUSADOR == "35 a 45", na.rm = TRUE),
+    NMF = mean(NUM_FERIDOS_GRAVES, na.rm = TRUE),
+    DPF = sd(NUM_FERIDOS_GRAVES, na.rm = TRUE),
+    F_P25 = quantile(NUM_FERIDOS_GRAVES, probs = 0.25, na.rm = TRUE),
+    F_P50 = quantile(NUM_FERIDOS_GRAVES, probs = 0.50, na.rm = TRUE),
+    F_P75 = quantile(NUM_FERIDOS_GRAVES, probs = 0.75, na.rm = TRUE),
+    TAFA = sum(CAUSA_ACIDENTE == "Falta de atenção", na.rm = TRUE),
+    TADS = sum(CAUSA_ACIDENTE == "Desrespeito à sinalização", na.rm = TRUE),
+    TADA = sum(CAUSA_ACIDENTE == "Uso de drogas ou álcool", na.rm = TRUE),
+    TACO = sum(CAUSA_ACIDENTE == "Outros", na.rm = TRUE)
+  )
+
+BANCO1_RJ <- bind_rows(banco1_uf, banco1_mun)
+
 # Ao terminar a Tarefa 3 commit com a mensagem " script - tarefa 1 a 3" e envie para o repositório Treino_Extensao
 
 
@@ -101,7 +159,7 @@ dados_bd1 <- dados_bd1 %>%
 # Tarefa 2: Manipulação dos dados
 # Padronizar as categorias SEXO_PROPRIETARIO para Masculino e Feminino
 # Atribuir legendas para a variável TIPO_VEICULO, sendo 1: Carro e 2: Moto
-# Criar uma nova variável em dados_bd2 F_IDADE categorizando as idades em: 22 a 34, 35 a 45
+# Criar uma nova variável em dados_bd2 IDADE_CONDUTOR_CAUSADOR categorizando as idades em: 22 a 34, 35 a 45
 
 # Ao terminar a Tarefa 2 commit com a mensagem " script - tarefa 1 a 2" e envie para o repositório Treino_Extensao
 
