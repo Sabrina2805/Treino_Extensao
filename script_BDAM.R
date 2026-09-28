@@ -135,15 +135,13 @@ banco1_uf <- dados_bd1 %>%
     TACO = sum(CAUSA_ACIDENTE == "Outros", na.rm = TRUE)
   )
 
-BANCO1_RJ <- bind_rows(banco1_uf, banco1_mun)
-
 # Ao terminar a Tarefa 3 commit com a mensagem " script - tarefa 1 a 3" e envie para o repositório Treino_Extensao
 
 # Tarefa 4: Exportar o banco de dados BANCO1_RJ com o nome BANCO1_RJ.csv
 
+BANCO1_RJ <- bind_rows(banco1_uf, banco1_mun)
+
 # Ao terminar a Tarefa 4 commit com a mensagem "dados e script - Etapa 1"
-
-
 
 ##### ETAPA 2 - banco 2 - equivalente ao SINASC ######
 ##### Você deve criar e estar na branch banco-2 antes de inserir os comandos #####
@@ -152,28 +150,61 @@ BANCO1_RJ <- bind_rows(banco1_uf, banco1_mun)
 # Tarefa 1: Leitura do banco de dados banco 2 = SINASC.csv com o nome de dados_bd2
 # Ler o arquivo, verificar estrutura dos dados e dar uma olhada nos dados
 
-# Ao terminar a Tarefa 1 commit com a mensagem " script - tarefa 1" e envie para o repositório Treino_Extensao
+dados_bd2 <- read.csv2("banco 2 SINASC.csv", encoding = "UTF-8")
+str(dados_bd2)
+glimpse(dados_bd2)
+summary(dados_bd2)
 
+# Ao terminar a Tarefa 1 commit com a mensagem " script - tarefa 1" e envie para o repositório Treino_Extensao
 
 # Tarefa 2: Manipulação dos dados
 # Padronizar as categorias SEXO_PROPRIETARIO para Masculino e Feminino
 # Atribuir legendas para a variável TIPO_VEICULO, sendo 1: Carro e 2: Moto
 # Criar uma nova variável em dados_bd2 IDADE_CONDUTOR_CAUSADOR categorizando as idades em: 22 a 34, 35 a 45
 
-# Ao terminar a Tarefa 2 commit com a mensagem " script - tarefa 1 a 2" e envie para o repositório Treino_Extensao
+dados_bd2 <- dados_bd2 %>%
+  mutate(
+    SEXO_PROPRIETARIO = case_when(
+      SEXO_PROPRIETARIO %in% c("1", "M", "Masculino", "MASCULINO") ~ "Masculino",
+      SEXO_PROPRIETARIO %in% c("2", "F", "Feminino", "FEMININO")   ~ "Feminino",
+      TRUE                                                         ~ NA_character_
+    ),
+    TIPO_VEICULO = case_when(
+      TIPO_VEICULO == 1 ~ "Carro",
+      TIPO_VEICULO == 2 ~ "Moto",
+      TRUE              ~ NA_character_
+    ),
+    IDADE_CONDUTOR_CAUSADOR = case_when(
+      IDADE_PROPRIETARIO >= 22 & IDADE_PROPRIETARIO <= 34 ~ "22 a 34",
+      IDADE_PROPRIETARIO >= 35 & IDADE_PROPRIETARIO <= 45 ~ "35 a 45",
+      TRUE                                                ~ NA_character_
+    )
+  )
 
+# Ao terminar a Tarefa 2 commit com a mensagem " script - tarefa 1 a 2" e envie para o repositório Treino_Extensao
 
 # Tarefa 3: Leitura do banco de dados Tabela_PAM.csv (com o nome tabela_pam) e:
 # agregar ao banco dados_bd2 as informações de VALOR_P10 e VALOR_P90
 # criar a variável PAM (somente quando TIPO_VEICULO = "Carro"), de acordo com IDADE_PROPRIETARIO e SEXO_PROPRIETARIO, com as seguintes categorias:
 # PAM = "PIC", se VALOR_VEICULO < VALOR_P10; "AIC", se VALOR_P10 <= VALOR_VEICULO <= VALOR_P90; "GIC", se VALOR_VEICULO > VALOR_P90
 
-# Ao terminar a Tarefa 3 commit com a mensagem " script - tarefa 1 a 3" e envie para o repositório Treino_Extensao
+tabela_pam <- read.csv2("Tabela_PAM.csv", encoding = "UTF-8")
 
+dados_bd2 <- dados_bd2 %>%
+  left_join(tabela_pam, by = c("IDADE_PROPRIETARIO", "SEXO_PROPRIETARIO")) %>%
+  mutate(
+    PAM = case_when(
+      TIPO_VEICULO == "Carro" & VALOR_VEICULO < VALOR_P10                   ~ "PIC",
+      TIPO_VEICULO == "Carro" & VALOR_VEICULO >= VALOR_P10 & VALOR_VEICULO <= VALOR_P90 ~ "AIC",
+      TIPO_VEICULO == "Carro" & VALOR_VEICULO > VALOR_P90                   ~ "GIC",
+      TRUE                                                                  ~ NA_character_
+    )
+  )
+
+# Ao terminar a Tarefa 3 commit com a mensagem " script - tarefa 1 a 3" e envie para o repositório Treino_Extensao
 
 # Tarefa 4: Criar o banco de dados BANCO2_RJ, POR MUNICÍPIO, com as seguintes variáveis listadas abaixo. 
 # Variáveis que se referem a medidas de posição e de dispersão devem ser calculadas sem considerar NAs
-
 # Atenção: a 1a linha do banco deve ser da UF 33
 # ANO: 2025
 # NIVEL: UF ou MUNICIPIO
@@ -194,13 +225,61 @@ BANCO1_RJ <- bind_rows(banco1_uf, banco1_mun)
 # TAIC: total de compradores com perfil AIC
 # TGIC: total de compradores com perfil GIC
 
-# Ao terminar a Tarefa 4 commit com a mensagem " script - tarefa 1 a 4" e envie para o repositório Treino_Extensao
+banco2_mun <- dados_bd2 %>%
+  group_by(MUNICIPIO) %>%
+  summarise(
+    ANO = 2025,
+    NIVEL = "MUNICIPIO",
+    CODIGO = as.character(first(MUNICIPIO)),
+    TVV = sum(!is.na(TIPO_VEICULO)),
+    TCV = sum(TIPO_VEICULO == "Carro", na.rm = TRUE),
+    TMV = sum(TIPO_VEICULO == "Moto", na.rm = TRUE),
+    TVVF = sum(SEXO_PROPRIETARIO == "Feminino", na.rm = TRUE),
+    TVVM = sum(SEXO_PROPRIETARIO == "Masculino", na.rm = TRUE),
+    TVC_22_34 = sum(IDADE_CONDUTOR_CAUSADOR == "22 a 34", na.rm = TRUE),
+    TVC_35_45 = sum(IDADE_CONDUTOR_CAUSADOR == "35 a 45", na.rm = TRUE),
+    VMV = mean(VALOR_VEICULO, na.rm = TRUE),
+    DPV = sd(VALOR_VEICULO, na.rm = TRUE),
+    V_P25 = quantile(VALOR_VEICULO, probs = 0.25, na.rm = TRUE),
+    V_P50 = quantile(VALOR_VEICULO, probs = 0.50, na.rm = TRUE),
+    V_P75 = quantile(VALOR_VEICULO, probs = 0.75, na.rm = TRUE),
+    TPIC = sum(PAM == "PIC", na.rm = TRUE),
+    TAIC = sum(PAM == "AIC", na.rm = TRUE),
+    TGIC = sum(PAM == "GIC", na.rm = TRUE),
+    .groups = "drop"
+  )
 
+banco2_uf <- dados_bd2 %>%
+  summarise(
+    ANO = 2025,
+    NIVEL = "UF",
+    CODIGO = "33",
+    TVV = sum(!is.na(TIPO_VEICULO)),
+    TCV = sum(TIPO_VEICULO == "Carro", na.rm = TRUE),
+    TMV = sum(TIPO_VEICULO == "Moto", na.rm = TRUE),
+    TVVF = sum(SEXO_PROPRIETARIO == "Feminino", na.rm = TRUE),
+    TVVM = sum(SEXO_PROPRIETARIO == "Masculino", na.rm = TRUE),
+    TVC_22_34 = sum(IDADE_CONDUTOR_CAUSADOR == "22 a 34", na.rm = TRUE),
+    TVC_35_45 = sum(IDADE_CONDUTOR_CAUSADOR == "35 a 45", na.rm = TRUE),
+    VMV = mean(VALOR_VEICULO, na.rm = TRUE),
+    DPV = sd(VALOR_VEICULO, na.rm = TRUE),
+    V_P25 = quantile(VALOR_VEICULO, probs = 0.25, na.rm = TRUE),
+    V_P50 = quantile(VALOR_VEICULO, probs = 0.50, na.rm = TRUE),
+    V_P75 = quantile(VALOR_VEICULO, probs = 0.75, na.rm = TRUE),
+    TPIC = sum(PAM == "PIC", na.rm = TRUE),
+    TAIC = sum(PAM == "AIC", na.rm = TRUE),
+    TGIC = sum(PAM == "GIC", na.rm = TRUE)
+  )
+
+BANCO2_RJ <- bind_rows(banco2_uf, banco2_mun)
+
+# Ao terminar a Tarefa 4 commit com a mensagem " script - tarefa 1 a 4" e envie para o repositório Treino_Extensao
 
 # Tarefa 5: Exportar o banco de dados BANCO2_RJ com o nome BANCO2_RJ.csv
 
-# Ao terminar a Tarefa 5 commit com a mensagem "dados e script - Etapa 2" e envie para o repositório Treino_Extensao
+write.csv2(BANCO2_RJ, "BANCO2_RJ.csv", row.names = FALSE, fileEncoding = "UTF-8")
 
+# Ao terminar a Tarefa 5 commit com a mensagem "dados e script - Etapa 2" e envie para o repositório Treino_Extensao
 
 ##### ETAPA 3 - banco 3 - equivalente ao SIDRA ######
 ##### Você deve criar e estar na branch banco-3 antes de inserir os comandos #####
