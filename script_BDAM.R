@@ -288,6 +288,13 @@ write.csv2(BANCO2_RJ, "BANCO2_RJ.csv", row.names = FALSE, fileEncoding = "UTF-8"
 # Tarefa 1: Leitura do banco de dados banco 3 = SIDRA.csv com o nome de dados_bd3
 # Ler o arquivo, verificar estrutura dos dados e dar uma olhada nos dados
 
+library(readr)
+dados_bd3 <- read_delim("banco 3 SIDRA.csv", 
+                            delim = ";", escape_double = FALSE, trim_ws = TRUE)
+View(dados_bd3)
+str(dados_bd3)
+head(dados_bd3)
+
 # Ao terminar a Tarefa 1 commit com a mensagem " script - tarefa 1" e envie para o repositório Treino_Extensao
 
 
