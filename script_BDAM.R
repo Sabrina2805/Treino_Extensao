@@ -314,8 +314,16 @@ dados_bd3$MUNICIPIOS <- substr(as.character(dados_bd3$MUNICIPIO), 1, 6)
 # POPHF: população total feminina de habilitadas
 # POPHM: população total masculina de habilitadas
 
-# Ao terminar a Tarefa 3 commit com a mensagem " script - tarefa 1 a 3" e envie para o repositório Treino_Extensao
+BANCO3_RJ <- data.frame(
+  ANO = 2025,
+  NIVEL = dados_bd3$MUNICIPIOS,
+  CODIGO = dados_bd3$MUNICIPIO,
+  POPH = dados_bd3$HABILITADOS_GERAL_2025,
+  POPHF = dados_bd3$POP_FEM_HABILITADA_2020,
+  POPHM = dados_bd3$POP_MASC_HABILITADA_2020
+)
 
+# Ao terminar a Tarefa 3 commit com a mensagem " script - tarefa 1 a 3" e envie para o repositório Treino_Extensao
 
 # Tarefa 4: Exportar o banco de dados BANCO3_RJ com o nome BANCO3_RJ.csv
 
