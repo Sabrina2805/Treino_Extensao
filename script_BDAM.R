@@ -336,9 +336,39 @@ write.csv2(BANCO3_RJ, "BANCO3_RJ.csv", row.names = FALSE)
 ##### Você deve criar e estar na branch banco-4 antes de inserir os comandos #####
 ##### NÃO altere as linhas de qualquer outra ETAPA do script e nem do cabeçalho ###
 
+
+
 # Tarefa 1: Leitura do banco de dados banco 4 = ATLAS.csv com o nome de dados_bd4 e do arquivo com tabela de códigos do IBGE
 # códigos dos municípios - 2010.csv" com os códigos do IBGE para os municípios do Brasil
 # Ler os arquivos, verificar estruturas dos dados e dar uma olhada nos dados
+
+library(readr)
+library(dplyr)
+
+
+dados_bd4 <- read_delim("banco 4 ATLAS.csv", 
+                        delim = ";", 
+                        escape_double = FALSE, 
+                        trim_ws = TRUE,
+                        locale = locale(encoding = "latin1"))
+
+codigos_ibge <- read_delim("códigos dos municípios - 2010.csv", 
+                           delim = ";", 
+                           escape_double = FALSE, 
+                           trim_ws = TRUE)
+
+
+View(dados_bd4)
+View(codigos_ibge)
+
+glimpse(dados_bd4)
+glimpse(codigos_ibge)
+
+summary(dados_bd4)
+summary(codigos_ibge)
+
+head(dados_bd4)
+head(codigos_ibge)
 
 # Ao terminar a Tarefa 1 commit com a mensagem " script - tarefa 1" e envie para o repositório Treino_Extensao
 
