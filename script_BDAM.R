@@ -410,6 +410,31 @@ head(dados_bd4 %>% select(MUNICIPIO, MUNICIPIOS))
 # QRR: qualidade das rodovias rurais
 
 
+dados_rj_mun <- dados_bd4 %>%
+  filter(substr(as.character(MUNICIPIOS), 1, 2) == "33") %>%
+  transmute(
+    ANO = 2025,
+    NIVEL = "MUNICIPIO",
+    CODIGO = as.character(MUNICIPIOS),
+    QR_CA = QUALIDADE_RODOVIAS_2020,
+    QRU = QUALIDADE_URBANA_2025,
+    QRR = QUALIDADE_RURAL_2025
+  )
+
+linha_uf <- data.frame(
+  ANO = 2025,
+  NIVEL = "UF",
+  CODIGO = "33",
+  QR_CA = mean(dados_rj_mun$QR_CA, na.rm = TRUE),
+  QRU = mean(dados_rj_mun$QRU, na.rm = TRUE),
+  QRR = mean(dados_rj_mun$QRR, na.rm = TRUE)
+)
+
+BANCO4_RJ <- bind_rows(linha_uf, dados_rj_mun)
+
+head(BANCO4_RJ)
+glimpse(BANCO4_RJ)
+
 # Ao terminar a Tarefa 3 commit com a mensagem " script - tarefa 1 a 3" e envie para o repositório Treino_Extensao
 
 
