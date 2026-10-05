@@ -377,6 +377,26 @@ head(codigos_ibge)
 # Criar uma nova variável em dados_bd4 MUNICIPIOS atribuindo os códigos dos municípios, de forma a ficar
 # coerente com os nomes dos municipios e códigos IBGE
 
+library(readr)
+library(dplyr)
+
+dados_bd4 <- dados_bd4 %>%
+  mutate(mun_clean = gsub("\\s*\\([A-Z]{2}\\)", "", MUNICIPIO),
+         mun_clean = toupper(iconv(trimws(mun_clean), to = "ASCII//TRANSLIT")))
+
+codigos_ibge <- codigos_ibge %>%
+  mutate(mun_clean = toupper(iconv(trimws(município), to = "ASCII//TRANSLIT")))
+
+dados_bd4 <- dados_bd4 %>%
+  left_join(codigos_ibge %>% select(mun_clean, CODMUNRES) %>% distinct(mun_clean, .keep_all = TRUE), 
+            by = "mun_clean") %>%
+  rename(MUNICIPIOS = CODMUNRES) %>%
+  select(-mun_clean)
+
+
+head(dados_bd4 %>% select(MUNICIPIO, MUNICIPIOS))
+
+
 # Ao terminar a Tarefa 2 commit com a mensagem " script - tarefa 1 a 2" e envie para o repositório Treino_Extensao
 
 
