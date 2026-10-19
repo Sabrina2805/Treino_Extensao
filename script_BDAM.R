@@ -453,6 +453,19 @@ write.csv2(BANCO4_RJ, "BANCO4_RJ.csv", row.names = FALSE)
 # Tarefa 1: Leitura do banco de dados banco 5 = SINISA.csv com o nome de dados_bd5 
 # Ler os arquivos, verificar estruturas dos dados e dar uma olhada nos dados
 
+dados_bd5 <- read.csv2("banco 5 SINISA.csv", 
+                                       encoding = "latin1", 
+                                       check.names = FALSE, 
+                                       stringsAsFactors = FALSE)
+
+dados_bd5
+
+dados_bd5$NUM_CARROS_REGISTRADOS <- as.numeric(gsub("\\.", "", dados_bd5$NUM_CARROS_REGISTRADOS))
+dados_bd5$NUM_MOTOS_REGISTRADAS <- as.numeric(gsub("\\.", "", dados_bd5$NUM_MOTOS_REGISTRADAS))
+
+str(dados_bd5)
+head(dados_bd5)
+
 # Ao terminar a Tarefa 1 commit com a mensagem " script - tarefa 1" e envie para o repositório Treino_Extensao
 
 
